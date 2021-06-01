@@ -9,3 +9,18 @@
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
+
+import javax.swing.*;
+public JButton(String text)
+
+file = file.createNewFile();
+Desktop desktop = Desktop.getDesktop();
+if (file) {
+    System.out.println("file created ");
+    desktop.open(file);
+    }
+else {
+    System.out.println("File already exist at location: ");
+    }
+
+file.close();

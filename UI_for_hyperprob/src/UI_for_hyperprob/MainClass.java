@@ -5,8 +5,8 @@ import javax.swing.*;
 public class MainClass {
 
     public static void main(String args[]) {
-            GUIForm form = new GUIForm();
-            JFrame frame = new JFrame("Your window name");
+            GUIForm button = new GUIForm();
+            JFrame frame = new JFrame("Your window frame");
             frame.setContentPane(new button().getJPanel());
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.pack();

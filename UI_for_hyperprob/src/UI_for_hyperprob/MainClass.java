@@ -3,7 +3,6 @@ package UI_for_hyperprob;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import javax.swing.JTextArea;
 import javax.swing.*;
 import javax.swing.JFrame;
 import javax.swing.JTextPane;
@@ -14,10 +13,6 @@ public class MainClass {
 
         editor e = new editor();
         String path = "sum.py";
-        // String home = System.getProperty("user.home");
-        // File file = new File(home+"/Downloads/" + fileName + ".txt");
-
-        // ProcessBuilder pb = new ProcessBuilder("python", file).inheritIO();
 //        ProcessBuilder pb = new ProcessBuilder("python", path);
 //        pb.inheritIO();
 //        pb.redirectErrorStream(true);
@@ -33,8 +28,8 @@ public class MainClass {
         JTextArea Text = new JTextArea(5, 10);
         JTextArea Text1 = new JTextArea(5, 10);
         // Text.setText("HI");
-        Text1.setText("Hey");
-        p2.add(Text1);
+      Text1.setText("Hey");
+        p1.add(Text1);
         // JFrame f = new JFrame("frame");
         // JSplitPane sp = new JSplitPane(SwingConstants.VERTICAL, p1, p2);
         //   sp.setOrientation(SwingConstants.VERTICAL);
@@ -46,16 +41,24 @@ public class MainClass {
             Text.setText(line);
             System.out.println(line);
         }
-        p1.add(Text);
+        e.button.setText(line);
+        p2.add(Text);
         String err;
         while ((err = stdError.readLine()) != null) {
             System.out.println(err);
         }
-        //   window.add(Text);
-        //  window.pack();
-        //  window.setVisible(true);
+        
+       // JList list  = new JList((ListModel) e);
+        //JScrollPane scroll = new JScrollPane(list);
+        //scroll.add(p1);
+       //JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scroll, list);
+        //window.add(split);
         JSplitPane sp = new JSplitPane(SwingConstants.VERTICAL, p1, p2);
-        sp.setOrientation(SwingConstants.VERTICAL);
+        
+       // p2.add(e);
+       // JSeparator sp = new JSeparator();
+        sp.setOrientation(SwingConstants.HORIZONTAL);
+        
         window.add(sp);
         window.setSize(300, 300);
         window.setVisible(true);

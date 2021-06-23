@@ -8,6 +8,10 @@ class editor extends JFrame implements ActionListener {
 
     JTextArea t;
     JFrame f;
+    JSplitPane split;
+    JPanel bottom;
+    JTextField t1;
+    JButton button;
     editor() {
         f = new JFrame("editor");
 
@@ -43,7 +47,7 @@ class editor extends JFrame implements ActionListener {
         m1.add(mi3);
         m1.add(mi9);
 
-        // Create amenu for menu
+        // Create a menu for menu
         JMenu m2 = new JMenu("Edit");
 
         // Create menu items
@@ -64,12 +68,24 @@ class editor extends JFrame implements ActionListener {
 
         mc.addActionListener(this);
 
+        split = new JSplitPane();
+        bottom = new JPanel();
+        t1 = new JTextField();
+        button = new JButton("button");
+
+        split.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
+        split.setDividerLocation(200);
+        split.setBottomComponent(bottom);
+        bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
+        bottom.add(t1);
+        bottom.add(button);
+
         mb.add(m1);
         mb.add(m2);
         mb.add(mc);
-
         f.setJMenuBar(mb);
         f.add(t);
+        f.add(bottom);
         f.setSize(500, 500);
         f.show();
     }
@@ -164,6 +180,7 @@ class editor extends JFrame implements ActionListener {
             t.setText("");
         } else if (s.equals("close")) {
             f.setVisible(false);
+
         }
     }
 }

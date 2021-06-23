@@ -41,7 +41,7 @@ public class MainClass {
             Text.setText(line);
             System.out.println(line);
         }
-        e.button.setText(line);
+        e.t1.setText(line);
         p2.add(Text);
         String err;
         while ((err = stdError.readLine()) != null) {

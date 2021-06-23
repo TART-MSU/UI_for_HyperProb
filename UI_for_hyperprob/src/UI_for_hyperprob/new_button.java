@@ -10,8 +10,8 @@ class editor extends JFrame implements ActionListener {
     JFrame f;
     JSplitPane split;
     JPanel bottom;
-    JTextField t1;
-    JButton button;
+    JTextArea t1;
+    //JButton button;
     editor() {
         f = new JFrame("editor");
 
@@ -64,24 +64,31 @@ class editor extends JFrame implements ActionListener {
         m2.add(mi5);
         m2.add(mi6);
 
+        JMenu m3 = new JMenu("Run");
+        JMenuItem mi33 = new JMenuItem("Run");
+        mi33.addActionListener(this);
+        m3.add(mi33);
+
+
         JMenuItem mc = new JMenuItem("close");
 
         mc.addActionListener(this);
 
         split = new JSplitPane();
         bottom = new JPanel();
-        t1 = new JTextField();
-        button = new JButton("button");
+        t1 = new JTextArea();
+      //  button = new JButton("button");
 
         split.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
         split.setDividerLocation(200);
         split.setBottomComponent(bottom);
         bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
         bottom.add(t1);
-        bottom.add(button);
+      //  bottom.add(button);
 
         mb.add(m1);
         mb.add(m2);
+        mb.add(m3);
         mb.add(mc);
         f.setJMenuBar(mb);
         f.add(t);
@@ -178,6 +185,30 @@ class editor extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(f, "the user cancelled the operation");
         } else if (s.equals("New")) {
             t.setText("");
+
+        } else if (s.equals("Run")) {
+            JPanel P = new JPanel();
+           // JButton button = new JButton("Run");
+            JTextField tf1 = new JTextField(20);
+            JTextField tf2 = new JTextField(20);
+
+            P.add(new JLabel("Model:"));
+            P.add(tf1);
+            P.add(Box.createHorizontalStrut(20));
+            P.add(new JLabel("Property:"));
+            P.add(tf2);
+            int result =JOptionPane.showConfirmDialog(null, P, "Enter:", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                System.out.println("Model: " + tf1.getText());
+                System.out.println("Property: " +tf2.getText());
+            }
+
+           // tf.setText("Text");
+           // button.add(tf);
+         //   window1.add(button);
+         //   window1.setSize(200,400);
+         //   window1.setVisible(true);
+
         } else if (s.equals("close")) {
             f.setVisible(false);
 

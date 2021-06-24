@@ -13,15 +13,11 @@ public class MainClass {
 
         editor e = new editor();
         String path = "sum.py";
-//        ProcessBuilder pb = new ProcessBuilder("python", path);
-//        pb.inheritIO();
-//        pb.redirectErrorStream(true);
-//        Process p = pb.start();
-//        p.waitFor();
-        Process p = Runtime.getRuntime().exec("python " + path);
-        BufferedReader bfr = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-        String line = "";
+
+   //     Process p = Runtime.getRuntime().exec("python " + path);
+   //     BufferedReader bfr = new BufferedReader(new InputStreamReader(p.getInputStream()));
+    //    BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+     //   String line = "";
         JFrame window = new JFrame("New Window");
         JPanel p1 = new JPanel();
         JPanel p2 = new JPanel();
@@ -37,26 +33,21 @@ public class MainClass {
         //  window.setSize(300, 300);
         //  window.setVisible(true);
 
-        while ((line = bfr.readLine()) != null) {
-            Text.setText(line);
-            System.out.println(line);
-        }
-        e.t1.setText(line);
-        p2.add(Text);
-        String err;
-        while ((err = stdError.readLine()) != null) {
-            System.out.println(err);
-        }
-        
-       // JList list  = new JList((ListModel) e);
-        //JScrollPane scroll = new JScrollPane(list);
-        //scroll.add(p1);
-       //JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scroll, list);
-        //window.add(split);
+      //  while ((line = bfr.readLine()) != null) {
+    //        Text.setText(line);
+    //        System.out.println(line);
+    //    }
+
+      //  e.result.setText();
+     //   p2.add(Text);
+     //   String err;
+     //   while ((err = stdError.readLine()) != null) {
+     //       System.out.println(err);
+     //   }
+
+
         JSplitPane sp = new JSplitPane(SwingConstants.VERTICAL, p1, p2);
-        
-       // p2.add(e);
-       // JSeparator sp = new JSeparator();
+
         sp.setOrientation(SwingConstants.HORIZONTAL);
         
         window.add(sp);

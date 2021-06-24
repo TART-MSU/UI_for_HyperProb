@@ -1,6 +1,9 @@
 package UI_for_hyperprob;
 
 import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.*;
 import java.awt.event.*;
 import javax.swing.plaf.metal.*;
@@ -8,10 +11,7 @@ class editor extends JFrame implements ActionListener {
 
     JTextArea t;
     JFrame f;
-    JSplitPane split;
-    JPanel bottom;
-    JTextArea t1;
-    //JButton button;
+
     editor() {
         f = new JFrame("editor");
 
@@ -74,17 +74,6 @@ class editor extends JFrame implements ActionListener {
 
         mc.addActionListener(this);
 
-        split = new JSplitPane();
-        bottom = new JPanel();
-        t1 = new JTextArea();
-      //  button = new JButton("button");
-
-        split.setOrientation(JSplitPane.VERTICAL_SPLIT);  // we want it to split the window verticaly
-        split.setDividerLocation(200);
-        split.setBottomComponent(bottom);
-        bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
-        bottom.add(t1);
-      //  bottom.add(button);
 
         mb.add(m1);
         mb.add(m2);
@@ -92,7 +81,6 @@ class editor extends JFrame implements ActionListener {
         mb.add(mc);
         f.setJMenuBar(mb);
         f.add(t);
-        f.add(bottom);
         f.setSize(500, 500);
         f.show();
     }
@@ -188,26 +176,52 @@ class editor extends JFrame implements ActionListener {
 
         } else if (s.equals("Run")) {
             JPanel P = new JPanel();
-           // JButton button = new JButton("Run");
             JTextField tf1 = new JTextField(20);
             JTextField tf2 = new JTextField(20);
+            JTextArea out = new JTextArea(5,10);
+
+            String path = "sum.py";
+
+            Process p = null;
+            try {
+                p = Runtime.getRuntime().exec("python " + path);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            String line = "";
+            String save = "";
+            while (true) {
+                try {
+                    if (!((line = bfr.readLine()) != null))
+                        break;
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                 save+=line;
+
+            }
+
 
             P.add(new JLabel("Model:"));
             P.add(tf1);
             P.add(Box.createHorizontalStrut(20));
             P.add(new JLabel("Property:"));
             P.add(tf2);
+
+            JPanel x = new JPanel();
+            JFrame frame = new JFrame("Output");
             int result =JOptionPane.showConfirmDialog(null, P, "Enter:", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 System.out.println("Model: " + tf1.getText());
                 System.out.println("Property: " +tf2.getText());
+                out.setText(save);
+                x.add(out);
+                frame.add(x);
+                frame.setSize(300,300);
+                frame.setVisible(true);
             }
-
-           // tf.setText("Text");
-           // button.add(tf);
-         //   window1.add(button);
-         //   window1.setSize(200,400);
-         //   window1.setVisible(true);
 
         } else if (s.equals("close")) {
             f.setVisible(false);

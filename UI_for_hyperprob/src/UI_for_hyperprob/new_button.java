@@ -6,15 +6,17 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.*;
 import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.plaf.metal.*;
 class editor extends JFrame implements ActionListener {
 
     JTextArea t;
     JFrame f;
-
+    JPanel P;
     editor() {
         f = new JFrame("editor");
-
+        P = new JPanel();
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 
@@ -64,12 +66,6 @@ class editor extends JFrame implements ActionListener {
         m2.add(mi5);
         m2.add(mi6);
 
-        JMenu m3 = new JMenu("Run");
-        JMenuItem mi33 = new JMenuItem("Run");
-        mi33.addActionListener(this);
-        m3.add(mi33);
-
-
         JMenuItem mc = new JMenuItem("close");
 
         mc.addActionListener(this);
@@ -77,11 +73,69 @@ class editor extends JFrame implements ActionListener {
 
         mb.add(m1);
         mb.add(m2);
-        mb.add(m3);
         mb.add(mc);
+
+        String path = "sum.py";
+
+        Process p = null;
+        try {
+            p = Runtime.getRuntime().exec("python " + path);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        BufferedReader bfr = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        String line = "";
+        String save = "";
+        while (true) {
+            try {
+                if (!((line = bfr.readLine()) != null))
+                    break;
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            save+=line;
+
+        }
+
+        //Tab
+        JTabbedPane tab = new JTabbedPane();
+        tab.setTabPlacement(SwingConstants.BOTTOM);
+        JPanel model = new JPanel();
+        JPanel prop = new JPanel();
+        JPanel run = new JPanel();
+        tab.addTab("Model",model);
+        tab.addTab("Property",prop);
+        tab.addTab("Run", run);
+
+        //Run Panel
+        JTextField input1 = new JTextField(20);
+        JTextField input2 = new JTextField(20);
+        run.add(new JLabel("Model:"));
+        run.add(input1);
+        run.add(Box.createHorizontalStrut(20));
+        run.add(new JLabel("Property:"));
+        run.add(input2);
+
+        JTextArea out = new JTextArea(5,10);
+        out.setText(save);
+        JButton b = new JButton("Run");
+        b.setBounds(50,100,95,30);
+        run.add(b);
+        run.add(out);
+        out.setVisible(false);
+        b.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                out.setVisible(true);
+            }
+        });
+
         f.setJMenuBar(mb);
-        f.add(t);
-        f.setSize(500, 500);
+         model.add(t);
+       //  prop.add(t);
+        model.setSize(300,300);
+        f.setSize(700, 700);
+        f.getContentPane().add(tab);
         f.show();
     }
 
@@ -173,55 +227,6 @@ class editor extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(f, "the user cancelled the operation");
         } else if (s.equals("New")) {
             t.setText("");
-
-        } else if (s.equals("Run")) {
-            JPanel P = new JPanel();
-            JTextField tf1 = new JTextField(20);
-            JTextField tf2 = new JTextField(20);
-            JTextArea out = new JTextArea(5,10);
-
-            String path = "sum.py";
-
-            Process p = null;
-            try {
-                p = Runtime.getRuntime().exec("python " + path);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-            BufferedReader bfr = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            String line = "";
-            String save = "";
-            while (true) {
-                try {
-                    if (!((line = bfr.readLine()) != null))
-                        break;
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-                 save+=line;
-
-            }
-
-
-            P.add(new JLabel("Model:"));
-            P.add(tf1);
-            P.add(Box.createHorizontalStrut(20));
-            P.add(new JLabel("Property:"));
-            P.add(tf2);
-
-            JPanel x = new JPanel();
-            JFrame frame = new JFrame("Output");
-            int result =JOptionPane.showConfirmDialog(null, P, "Enter:", JOptionPane.OK_CANCEL_OPTION);
-            if (result == JOptionPane.OK_OPTION) {
-                System.out.println("Model: " + tf1.getText());
-                System.out.println("Property: " +tf2.getText());
-                out.setText(save);
-                x.add(out);
-                frame.add(x);
-                frame.setSize(300,300);
-                frame.setVisible(true);
-            }
 
         } else if (s.equals("close")) {
             f.setVisible(false);

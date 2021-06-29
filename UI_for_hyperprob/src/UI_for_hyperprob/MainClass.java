@@ -46,13 +46,13 @@ public class MainClass {
      //   }
 
 
-        JSplitPane sp = new JSplitPane(SwingConstants.VERTICAL, p1, p2);
+       // JSplitPane sp = new JSplitPane(SwingConstants.VERTICAL, p1, p2);
 
-        sp.setOrientation(SwingConstants.HORIZONTAL);
+     //   sp.setOrientation(SwingConstants.HORIZONTAL);
         
-        window.add(sp);
-        window.setSize(300, 300);
-        window.setVisible(true);
+      //  window.add(sp);
+      //  window.setSize(300, 300);
+      //  window.setVisible(true);
     }
 
 }

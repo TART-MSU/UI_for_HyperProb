@@ -113,7 +113,7 @@ class editor extends JFrame implements ActionListener {
         run.add(scrollo);
         out.setVisible(false);
 
-        /*String path_file = "source.py";
+        String path_file = "source.py";
         String path_model = "benchmark_files/mdp/TA/timing_attack2.nm";
         File myObj = new File("property.txt");
         Scanner myReader = null;
@@ -125,9 +125,9 @@ class editor extends JFrame implements ActionListener {
 
         String path_property = myReader.nextLine();
         System.out.println(path_property);
-        String cmd_array[] = new String[]{"python", path_file, path_model, path_property};*/
+        String cmd_array[] = new String[]{"python", path_file, path_model, path_property};
 
-        String cmd_array[] = new String[]{"python", "sum.py"};
+        //String cmd_array[] = new String[]{"python", "sum.py"};
 
         Process p = null;
         try {
@@ -165,12 +165,12 @@ class editor extends JFrame implements ActionListener {
         out.setText(output.toString());
 
         f.setJMenuBar(mb);
-        model.setBorder (new TitledBorder(new EtchedBorder()));
+        model.setBorder (new TitledBorder(new EtchedBorder(), "Model"));
         //model.add(t);
         model.add(scrollm);
         //prop.add(t);
-        model.setSize(250,250);
-        prop.setBorder (new TitledBorder(new EtchedBorder()));
+        model.setSize(250,240);
+        prop.setBorder (new TitledBorder(new EtchedBorder(), "Property"));
         prop.add(scrollp);
         prop.setSize(250,250);
         f.setSize(800, 800);

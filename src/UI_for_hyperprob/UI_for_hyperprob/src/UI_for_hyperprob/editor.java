@@ -1,6 +1,7 @@
 package UI_for_hyperprob;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -30,11 +31,11 @@ class editor extends JFrame implements ActionListener {
         } catch (Exception e) {
         }
 
-        modt = new JTextArea(47,70);
+        modt = new JTextArea(10,50);
         JScrollPane scrollm = new JScrollPane(modt);
         scrollm.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        propt = new JTextArea(47,70);
+        propt = new JTextArea(10,50);
         JScrollPane scrollp = new JScrollPane(propt);
         scrollp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -85,31 +86,25 @@ class editor extends JFrame implements ActionListener {
 
 
         //Tab
-        JTabbedPane tab = new JTabbedPane();
-        tab.setTabPlacement(SwingConstants.BOTTOM);
+       // JTabbedPane tab = new JTabbedPane();
+      //  tab.setTabPlacement(SwingConstants.BOTTOM);
         JPanel model = new JPanel();
         JPanel prop = new JPanel();
         JPanel run = new JPanel();
-        tab.addTab("Model",model);
-        tab.addTab("Property",prop);
-        tab.addTab("Run", run);
+       // tab.addTab("Model",model);
+       // tab.addTab("Property",prop);
+       // tab.addTab("Run", run);
 
         //Run Panel
-        JTextField input1 = new JTextField(20);
-        JTextField input2 = new JTextField(20);
-        run.add(new JLabel("Model:"));
-        run.add(input1);
-        run.add(Box.createHorizontalStrut(20));
-        run.add(new JLabel("Property:"));
-        run.add(input2);
         JButton b = new JButton("Run");
         b.addActionListener(this);
         b.setBounds(50,100,95,30);
         run.add(b);
 
-        out = new JTextArea(35,45);
+        out = new JTextArea(10,25);
         JScrollPane scrollo = new JScrollPane(out);
-        scrollm.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollo.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        run.setBorder (new TitledBorder(new EtchedBorder(), "Output"));
         run.add(scrollo);
         out.setVisible(false);
 
@@ -129,17 +124,17 @@ class editor extends JFrame implements ActionListener {
 
         //String cmd_array[] = new String[]{"python", "sum.py"};
 
-        Process p = null;
-        try {
+      //  Process p = null;
+      //  try {
             //p = Runtime.getRuntime().exec("python " + path);
             //System.out.println("python " + path_file + " " + path_model + " " + path_property);
-            p = Runtime.getRuntime().exec(cmd_array);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
+          //  p = Runtime.getRuntime().exec(cmd_array);
+     //   } catch (IOException ioException) {
+         //   ioException.printStackTrace();
+      //  }
 
-        assert p != null;
-        InputStream error = p.getErrorStream();
+     assert p != null;
+       InputStream error = p.getErrorStream();
         int c = 0;
         while (true) {
             try {
@@ -166,15 +161,24 @@ class editor extends JFrame implements ActionListener {
 
         f.setJMenuBar(mb);
         model.setBorder (new TitledBorder(new EtchedBorder(), "Model"));
-        //model.add(t);
         model.add(scrollm);
-        //prop.add(t);
         model.setSize(250,240);
+        JButton c1 = new JButton("Compile");
+        c1.addActionListener(this);
+        c1.setBounds(50,100,95,30);
+        model.add(c1);
         prop.setBorder (new TitledBorder(new EtchedBorder(), "Property"));
         prop.add(scrollp);
         prop.setSize(250,250);
+        JButton c2 = new JButton("Compile");
+        c2.addActionListener(this);
+        c2.setBounds(50,100,95,30);
+        prop.add(c2);
+        JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, model, prop);
+        sp.setDividerLocation(0.5);
         f.setSize(800, 800);
-        f.getContentPane().add(tab);
+        f.getContentPane().add(sp);
+        f.add(run,BorderLayout.SOUTH);
         f.show();
     }
 

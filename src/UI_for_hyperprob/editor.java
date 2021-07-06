@@ -101,7 +101,7 @@ class editor extends JFrame implements ActionListener {
         b.setBounds(50,100,95,30);
         run.add(b);
 
-        out = new JTextArea(10,25);
+        out = new JTextArea(10,50);
         JScrollPane scrollo = new JScrollPane(out);
         scrollo.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         run.setBorder (new TitledBorder(new EtchedBorder(), "Output"));
@@ -124,14 +124,14 @@ class editor extends JFrame implements ActionListener {
 
         //String cmd_array[] = new String[]{"python", "sum.py"};
 
-      //  Process p = null;
-      //  try {
-            //p = Runtime.getRuntime().exec("python " + path);
-            //System.out.println("python " + path_file + " " + path_model + " " + path_property);
-          //  p = Runtime.getRuntime().exec(cmd_array);
-     //   } catch (IOException ioException) {
-         //   ioException.printStackTrace();
-      //  }
+        Process p = null;
+        try {
+            p = Runtime.getRuntime().exec("python " + cmd_array);
+            System.out.println("python " + path_file + " " + path_model + " " + path_property);
+            p = Runtime.getRuntime().exec(cmd_array);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
 
      assert p != null;
        InputStream error = p.getErrorStream();
@@ -169,14 +169,14 @@ class editor extends JFrame implements ActionListener {
         model.add(c1);
         prop.setBorder (new TitledBorder(new EtchedBorder(), "Property"));
         prop.add(scrollp);
-        prop.setSize(250,250);
+        prop.setSize(250,240);
         JButton c2 = new JButton("Compile");
         c2.addActionListener(this);
         c2.setBounds(50,100,95,30);
         prop.add(c2);
         JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, model, prop);
         sp.setDividerLocation(0.5);
-        f.setSize(800, 800);
+        f.setSize(800, 700);
         f.getContentPane().add(sp);
         f.add(run,BorderLayout.SOUTH);
         f.show();
@@ -221,7 +221,6 @@ class editor extends JFrame implements ActionListener {
                 // If the user cancelled the operation
                 else
                     JOptionPane.showMessageDialog(f, "the user cancelled the operation");
-                break;
             }
             case "Open" -> {
                 // Create an object of JFileChooser class
@@ -237,8 +236,8 @@ class editor extends JFrame implements ActionListener {
 
                     try {
                         // String
-                        String s1 = "";
-                        StringBuilder sl = new StringBuilder();
+                        String s1;
+                        StringBuilder sl;
 
                         // File reader
                         FileReader fr = new FileReader(fi);
@@ -261,7 +260,6 @@ class editor extends JFrame implements ActionListener {
                     }
                 } else
                     JOptionPane.showMessageDialog(f, "the user cancelled the operation");
-                break;
             }
             case "New" -> modt.setText("");
             case "Close" -> f.setVisible(false);

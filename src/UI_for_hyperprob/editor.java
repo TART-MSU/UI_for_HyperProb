@@ -12,10 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.Scanner;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.metal.*;
-import java.io.File;
-import java.io.FilenameFilter;
 class editor extends JFrame implements ActionListener {
 
     JTextArea modt;
@@ -111,7 +108,7 @@ class editor extends JFrame implements ActionListener {
         run.add(scrollo);
         out.setVisible(false);
 
-     /*   String path_file = "source.py";
+        String path_file = "source.py";
         String path_model = "benchmark_files/mdp/TA/timing_attack2.nm";
         File myObj = new File("property.txt");
         Scanner myReader = null;
@@ -134,9 +131,9 @@ class editor extends JFrame implements ActionListener {
           //  p = Runtime.getRuntime().exec(cmd_array);
      //   } catch (IOException ioException) {
          //   ioException.printStackTrace();
-      //  } */
+      //  }
 
-   /*  assert p != null;
+     assert p != null;
        InputStream error = p.getErrorStream();
         int c = 0;
         while (true) {
@@ -160,7 +157,7 @@ class editor extends JFrame implements ActionListener {
             output.append('\n').append(line);
 
         }
-        out.setText(output.toString()); */
+        out.setText(output.toString());
 
         f.setJMenuBar(mb);
         model.setBorder (new TitledBorder(new EtchedBorder(), "Model"));
@@ -196,8 +193,6 @@ class editor extends JFrame implements ActionListener {
             case "Save" -> {
 
                 JFileChooser j = new JFileChooser("f:");
-                j.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
-                j.addChoosableFileFilter(new FileNameExtensionFilter("*.nm", "nm"));
 
                 // Invoke the showsSaveDialog function to show the save dialog
                 int r = j.showSaveDialog(null);
@@ -219,7 +214,6 @@ class editor extends JFrame implements ActionListener {
 
                         w.flush();
                         w.close();
-
                     } catch (Exception evt) {
                         JOptionPane.showMessageDialog(f, evt.getMessage());
                     }
@@ -232,27 +226,18 @@ class editor extends JFrame implements ActionListener {
             case "Open" -> {
                 // Create an object of JFileChooser class
                 JFileChooser j1 = new JFileChooser("f:");
-                j1.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
-                j1.addChoosableFileFilter(new FileNameExtensionFilter("*.nm", "nm"));
+
                 // Invoke the showsOpenDialog function to show the save dialog
                 int r = j1.showOpenDialog(null);
 
-
-
-                String [] options = {".txt", ".nm"};
-                JComboBox file = new JComboBox(options);
-                j1.add(file);
                 // If the user selects a file
-
-               if (r == JFileChooser.APPROVE_OPTION) {
+                if (r == JFileChooser.APPROVE_OPTION) {
                     // Set the label to the path of the selected directory
                     File fi = new File(j1.getSelectedFile().getAbsolutePath());
-
 
                     try {
                         // String
                         String s1 = "";
-                        String open_name = "";
                         StringBuilder sl = new StringBuilder();
 
                         // File reader
@@ -263,8 +248,7 @@ class editor extends JFrame implements ActionListener {
 
                         // Initialize sl
                         sl = new StringBuilder(br.readLine());
-                        open_name += fi;
-                        System.out.print("File Opened:"+ open_name);
+
                         // Take the input from the file
                         while ((s1 = br.readLine()) != null) {
                             sl.append("\n").append(s1);

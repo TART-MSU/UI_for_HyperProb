@@ -23,6 +23,7 @@ class editor extends JFrame implements ActionListener {
     JFrame f;
     JPanel P;
     JTextArea out;
+    String mod_path = null;
     //StringBuilder output;
     editor() {
         f = new JFrame("HyperProb");
@@ -99,17 +100,16 @@ class editor extends JFrame implements ActionListener {
        // tab.addTab("Run", run);
 
         //Run Panel
-        JButton b = new JButton("Run");
-        b.addActionListener(this);
-        b.setBounds(50,100,95,30);
-        run.add(b);
-
-        out = new JTextArea(10,25);
+        out = new JTextArea(10,50);
         JScrollPane scrollo = new JScrollPane(out);
         scrollo.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         run.setBorder (new TitledBorder(new EtchedBorder(), "Output"));
         run.add(scrollo);
         out.setVisible(false);
+        JButton b = new JButton("Run");
+        b.addActionListener(this);
+        b.setBounds(50,100,95,30);
+        run.add(b);
 
         String path_file = "source.py";
         String path_model = "benchmark_files/mdp/TA/timing_attack2.nm";
@@ -165,21 +165,21 @@ class editor extends JFrame implements ActionListener {
         f.setJMenuBar(mb);
         model.setBorder (new TitledBorder(new EtchedBorder(), "Model"));
         model.add(scrollm);
-        model.setSize(250,240);
-        JButton c1 = new JButton("Compile");
+        model.setSize(250,250);
+        JButton c1 = new JButton("Compile Model");
         c1.addActionListener(this);
         c1.setBounds(50,100,95,30);
         model.add(c1);
         prop.setBorder (new TitledBorder(new EtchedBorder(), "Property"));
         prop.add(scrollp);
         prop.setSize(250,250);
-        JButton c2 = new JButton("Compile");
+        JButton c2 = new JButton("Compile Property");
         c2.addActionListener(this);
         c2.setBounds(50,100,95,30);
         prop.add(c2);
         JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, model, prop);
         sp.setDividerLocation(0.5);
-        f.setSize(800, 800);
+        f.setSize(750, 750);
         f.getContentPane().add(sp);
         f.add(run,BorderLayout.SOUTH);
         f.show();
@@ -188,6 +188,7 @@ class editor extends JFrame implements ActionListener {
     // If a button is pressed
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
+        //String open_name = null;
 
         switch (s) {
             case "Cut" -> modt.cut();
@@ -247,7 +248,6 @@ class editor extends JFrame implements ActionListener {
                     try {
                         // String
                         String s1 = "";
-                        String open_name = "";
                         StringBuilder sl = new StringBuilder();
 
                         // File reader
@@ -258,9 +258,9 @@ class editor extends JFrame implements ActionListener {
 
                         // Initialize sl
                         sl = new StringBuilder(br.readLine());
-                        open_name += fi;
-                        System.out.print("File opened:" + open_name);
-
+                        String open_name = fi.toString();
+                        System.out.print("\nFile opened:" + open_name);
+                        mod_path = open_name;
                         // Take the input from the file
                         while ((s1 = br.readLine()) != null) {
                             sl.append("\n").append(s1);
@@ -278,6 +278,46 @@ class editor extends JFrame implements ActionListener {
             case "New" -> modt.setText("");
             case "Close" -> f.setVisible(false);
             case "Run" -> out.setVisible(true);
+            case "Compile Model" -> {
+                if (mod_path != null){
+                    String cmd_array[] = new String[]{"python", "check_model.py", mod_path};
+                    Process p = null;
+                    try {
+                        p = Runtime.getRuntime().exec(cmd_array);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                    assert p != null;
+                    InputStream error = p.getErrorStream();
+                    int c = 0;
+                    StringBuilder output = new StringBuilder();
+                    while (true) {
+                    try {
+                        if ((c = error.read()) == -1) break;
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                    //System.out.print((char) c);
+                        output.append((char) c);
+                    }
+                    BufferedReader bfr = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    String line = "";
+
+                    while (true) {
+                    try {
+                        if ((line = bfr.readLine()) == null)
+                            break;
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                    output.append('\n').append(line);
+
+                    }
+                    out.setText(output.toString());
+                    out.setVisible(true);
+                }
+
+            }
         }
     }
 }

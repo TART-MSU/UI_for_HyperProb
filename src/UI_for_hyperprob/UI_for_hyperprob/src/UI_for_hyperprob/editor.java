@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.io.*;
 import java.awt.event.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.awt.event.ActionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.Scanner;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -133,7 +136,7 @@ class editor extends JFrame implements ActionListener {
          //   ioException.printStackTrace();
       //  }
 
-     assert p != null;
+    /* assert p != null;
        InputStream error = p.getErrorStream();
         int c = 0;
         while (true) {
@@ -157,7 +160,7 @@ class editor extends JFrame implements ActionListener {
             output.append('\n').append(line);
 
         }
-        out.setText(output.toString());
+        out.setText(output.toString()); */
 
         f.setJMenuBar(mb);
         model.setBorder (new TitledBorder(new EtchedBorder(), "Model"));
@@ -193,6 +196,8 @@ class editor extends JFrame implements ActionListener {
             case "Save" -> {
 
                 JFileChooser j = new JFileChooser("f:");
+                j.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
+                j.addChoosableFileFilter(new FileNameExtensionFilter("*.nm", "nm"));
 
                 // Invoke the showsSaveDialog function to show the save dialog
                 int r = j.showSaveDialog(null);
@@ -226,9 +231,13 @@ class editor extends JFrame implements ActionListener {
             case "Open" -> {
                 // Create an object of JFileChooser class
                 JFileChooser j1 = new JFileChooser("f:");
-
+                j1.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
+                j1.addChoosableFileFilter(new FileNameExtensionFilter("*.nm", "nm"));
                 // Invoke the showsOpenDialog function to show the save dialog
                 int r = j1.showOpenDialog(null);
+                String [] options = {".txt", ".nm"};
+                JComboBox file = new JComboBox(options);
+                j1.add(file);
 
                 // If the user selects a file
                 if (r == JFileChooser.APPROVE_OPTION) {
@@ -238,6 +247,7 @@ class editor extends JFrame implements ActionListener {
                     try {
                         // String
                         String s1 = "";
+                        String open_name = "";
                         StringBuilder sl = new StringBuilder();
 
                         // File reader
@@ -248,6 +258,8 @@ class editor extends JFrame implements ActionListener {
 
                         // Initialize sl
                         sl = new StringBuilder(br.readLine());
+                        open_name += fi;
+                        System.out.print("File opened:" + open_name);
 
                         // Take the input from the file
                         while ((s1 = br.readLine()) != null) {

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.awt.event.ActionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.net.URI;
 import java.util.Scanner;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -50,18 +51,27 @@ class editor extends JFrame implements ActionListener {
         JMenu m1 = new JMenu("File");
 
         // menu items
-        JMenuItem mi1 = new JMenuItem("New");
-        JMenuItem mi2 = new JMenuItem("Open");
-        JMenuItem mi3 = new JMenuItem("Save");
+        JMenuItem mi1 = new JMenuItem("New Model");
+        JMenuItem m01 = new JMenuItem("New Property");
+        JMenuItem mi2 = new JMenuItem("Open Model");
+        JMenuItem m02 = new JMenuItem("Open Property");
+        JMenuItem mi3 = new JMenuItem("Save Model");
+        JMenuItem m03 = new JMenuItem("Save Property");
 
         // Add action listener
         mi1.addActionListener(this);
+        m01.addActionListener(this);
         mi2.addActionListener(this);
+        m02.addActionListener(this);
         mi3.addActionListener(this);
+        m03.addActionListener(this);
 
         m1.add(mi1);
+        m1.add(m01);
         m1.add(mi2);
+        m1.add(m02);
         m1.add(mi3);
+        m1.add(m03);
 
         // Create a menu for menu
         JMenu m2 = new JMenu("Edit");
@@ -80,13 +90,25 @@ class editor extends JFrame implements ActionListener {
         m2.add(mi5);
         m2.add(mi6);
 
-        JMenuItem mc = new JMenuItem("Close");
+        JMenu m3 = new JMenu("Help");
 
-        mc.addActionListener(this);
+        JMenuItem mi7 = new JMenuItem("User Manual");
+        JMenuItem mi8 = new JMenuItem("Example");
+        JMenuItem mi9 = new JMenuItem("Prism Website");
+
+        mi7.addActionListener(this);
+        mi8.addActionListener(this);
+        mi9.addActionListener(this);
+
+        m3.add(mi7);
+        m3.add(mi8);
+        m3.add(mi9);
+
+
 
         mb.add(m1);
         mb.add(m2);
-        mb.add(mc);
+        mb.add(m3);
 
 
         //Tab
@@ -111,7 +133,7 @@ class editor extends JFrame implements ActionListener {
         b.setBounds(50,100,95,30);
         run.add(b);
 
-        String path_file = "source.py";
+      /*  String path_file = "source.py";
         String path_model = "benchmark_files/mdp/TA/timing_attack2.nm";
         File myObj = new File("property.txt");
         Scanner myReader = null;
@@ -123,7 +145,7 @@ class editor extends JFrame implements ActionListener {
 
         String path_property = myReader.nextLine();
         System.out.println(path_property);
-        String cmd_array[] = new String[]{"python", path_file, path_model, path_property};
+        String cmd_array[] = new String[]{"python", path_file, path_model, path_property}; /*
 
         //String cmd_array[] = new String[]{"python", "sum.py"};
 
@@ -194,10 +216,9 @@ class editor extends JFrame implements ActionListener {
             case "Cut" -> modt.cut();
             case "Copy" -> modt.copy();
             case "Paste" -> modt.paste();
-            case "Save" -> {
+            case "Save Model" -> {
 
                 JFileChooser j = new JFileChooser("f:");
-                j.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
                 j.addChoosableFileFilter(new FileNameExtensionFilter("*.nm", "nm"));
 
                 // Invoke the showsSaveDialog function to show the save dialog
@@ -209,9 +230,13 @@ class editor extends JFrame implements ActionListener {
                     File fi = new File(j.getSelectedFile().getAbsolutePath());
 
                     try {
-                        // Create a file writer
-                        FileWriter wr = new FileWriter(fi, false);
+                        String filewr = j.getSelectedFile().getAbsolutePath();
 
+                        if (!filewr.substring(filewr.lastIndexOf(".")+1).equals("nm"))
+                            filewr += ".nm";
+                        // Create a file writer
+                      //  FileWriter wr = new FileWriter(fi, false);
+                        FileWriter wr = new FileWriter(filewr);
                         // Create buffered writer to write
                         BufferedWriter w = new BufferedWriter(wr);
 
@@ -229,10 +254,48 @@ class editor extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(f, "the user cancelled the operation");
                 break;
             }
-            case "Open" -> {
+            case "Save Property" -> {
+
+                JFileChooser jf = new JFileChooser("f:");
+                jf.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
+
+                // Invoke the showsSaveDialog function to show the save dialog
+                int r = jf.showSaveDialog(null);
+
+                if (r == JFileChooser.APPROVE_OPTION) {
+
+                    // Set the label to the path of the selected directory
+                    File fi = new File(jf.getSelectedFile().getAbsolutePath());
+
+                    try {
+                        String filewr = jf.getSelectedFile().getAbsolutePath();
+
+                        if (!filewr.substring(filewr.lastIndexOf(".")+1).equals("txt"))
+                            filewr += ".txt";
+                        // Create a file writer
+                       // FileWriter wr = new FileWriter(fi, false);
+                        FileWriter wr = new FileWriter(filewr);
+                        // Create buffered writer to write
+                        BufferedWriter w = new BufferedWriter(wr);
+
+                            // Write
+                            w.write(propt.getText());
+
+                            w.flush();
+                            w.close();
+
+                    } catch (Exception evt) {
+                            JOptionPane.showMessageDialog(f, evt.getMessage());
+                        }
+                    }
+                    // If the user cancelled the operation
+                    else
+                        JOptionPane.showMessageDialog(f, "the user cancelled the operation");
+                    break;
+            }
+            case "Open Model" -> {
                 // Create an object of JFileChooser class
                 JFileChooser j1 = new JFileChooser("f:");
-                j1.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
                 j1.addChoosableFileFilter(new FileNameExtensionFilter("*.nm", "nm"));
                 // Invoke the showsOpenDialog function to show the save dialog
                 int r = j1.showOpenDialog(null);
@@ -275,7 +338,53 @@ class editor extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(f, "the user cancelled the operation");
                 break;
             }
-            case "New" -> modt.setText("");
+            case "Open Property" -> {
+                // Create an object of JFileChooser class
+                JFileChooser j2 = new JFileChooser("f:");
+                j2.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
+                // Invoke the showsOpenDialog function to show the save dialog
+                int r = j2.showOpenDialog(null);
+                String [] options = {".txt", ".nm"};
+                JComboBox file = new JComboBox(options);
+                j2.add(file);
+
+                // If the user selects a file
+                if (r == JFileChooser.APPROVE_OPTION) {
+                    // Set the label to the path of the selected directory
+                    File fi = new File(j2.getSelectedFile().getAbsolutePath());
+
+                    try {
+                        // String
+                        String s1 = "";
+                        StringBuilder sl = new StringBuilder();
+
+                        // File reader
+                        FileReader fr = new FileReader(fi);
+
+                        // Buffered reader
+                        BufferedReader br = new BufferedReader(fr);
+
+                        // Initialize sl
+                        sl = new StringBuilder(br.readLine());
+                        String open_name = fi.toString();
+                        System.out.print("\nFile opened:" + open_name);
+                        mod_path = open_name;
+                        // Take the input from the file
+                        while ((s1 = br.readLine()) != null) {
+                            sl.append("\n").append(s1);
+                        }
+
+                        // Set the text
+                        propt.setText(sl.toString());
+                    } catch (Exception evt) {
+                        JOptionPane.showMessageDialog(f, evt.getMessage());
+                    }
+                } else
+                    JOptionPane.showMessageDialog(f, "the user cancelled the operation");
+                break;
+            }
+            case "New Model" -> modt.setText("");
+            case "New Property" -> propt.setText("");
             case "Close" -> f.setVisible(false);
             case "Run" -> out.setVisible(true);
             case "Compile Model" -> {
@@ -315,6 +424,33 @@ class editor extends JFrame implements ActionListener {
                     }
                     out.setText(output.toString());
                     out.setVisible(true);
+                }
+
+            }
+            case "User Manual" -> {
+                try {
+                    String home = "https://oyendrila-dobe.github.io/HyperProb/";
+                    Desktop.getDesktop().browse(URI.create(home));
+                } catch (IOException ioException) {
+                    System.out.println("Error");
+                }
+
+            }
+            case "Example" -> {
+                try {
+                    String ex = "https://oyendrila-dobe.github.io/HyperProb/benchmarks/";
+                    Desktop.getDesktop().browse(URI.create(ex));
+                } catch (IOException ioException) {
+                    System.out.println("Error");
+                }
+
+            }
+            case "Prism Website" -> {
+                try {
+                    String prism = "https://www.prismmodelchecker.org/manual/ThePRISMLanguage/Introduction";
+                    Desktop.getDesktop().browse(URI.create(prism));
+                } catch (IOException ioException) {
+                    System.out.println("Error");
                 }
 
             }

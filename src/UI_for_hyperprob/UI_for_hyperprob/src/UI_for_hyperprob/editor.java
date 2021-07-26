@@ -9,22 +9,45 @@ import java.io.*;
 import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.lang.Object;
+import java.awt.Font;
+import javax.swing.text.StyleContext;
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
 import java.io.FilenameFilter;
 import java.awt.event.ActionListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.net.URI;
+import javax.swing.text.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.awt.Color;
+import java.awt.Font;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Scanner;
+import java.awt.MouseInfo;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.metal.*;
+
 class editor extends JFrame implements ActionListener {
 
-    JTextArea modt;
-    JTextArea propt;
+   // JTextArea modt;
+    //JTextArea propt;
+    JTextPane modt;
+   // JEditorPane modt;
+    JEditorPane propt;
     JFrame f;
     JPanel P;
     JTextArea out;
     String mod_path = null;
+    private Object Token;
+
+
     //StringBuilder output;
     editor() {
         f = new JFrame("HyperProb");
@@ -36,13 +59,19 @@ class editor extends JFrame implements ActionListener {
         } catch (Exception e) {
         }
 
-        modt = new JTextArea(10,50);
+        modt = new JTextPane();
+        //modt = new JEditorPane();
+        modt.setPreferredSize(new Dimension(500,200));
+       // modt = new JTextArea(15,50);
         JScrollPane scrollm = new JScrollPane(modt);
         scrollm.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        propt = new JTextArea(10,50);
+        propt = new JEditorPane();
+        propt.setPreferredSize(new Dimension(500,50));
+       // propt = new JTextArea(10,50);
         JScrollPane scrollp = new JScrollPane(propt);
         scrollp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
 
         //menu bar
         JMenuBar mb = new JMenuBar();
@@ -111,18 +140,14 @@ class editor extends JFrame implements ActionListener {
         mb.add(m3);
 
 
-        //Tab
-       // JTabbedPane tab = new JTabbedPane();
-      //  tab.setTabPlacement(SwingConstants.BOTTOM);
+
         JPanel model = new JPanel();
         JPanel prop = new JPanel();
         JPanel run = new JPanel();
-       // tab.addTab("Model",model);
-       // tab.addTab("Property",prop);
-       // tab.addTab("Run", run);
+
 
         //Run Panel
-        out = new JTextArea(10,50);
+        out = new JTextArea(15,60);
         JScrollPane scrollo = new JScrollPane(out);
         scrollo.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         run.setBorder (new TitledBorder(new EtchedBorder(), "Output"));
@@ -189,6 +214,9 @@ class editor extends JFrame implements ActionListener {
         model.add(scrollm);
         model.setSize(250,250);
         JButton c1 = new JButton("Compile Model");
+
+
+
         c1.addActionListener(this);
         c1.setBounds(50,100,95,30);
         model.add(c1);
@@ -210,6 +238,7 @@ class editor extends JFrame implements ActionListener {
     // If a button is pressed
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
+
         //String open_name = null;
 
         switch (s) {
@@ -232,8 +261,9 @@ class editor extends JFrame implements ActionListener {
                     try {
                         String filewr = j.getSelectedFile().getAbsolutePath();
 
-                        if (!filewr.substring(filewr.lastIndexOf(".")+1).equals("nm"))
+                        if (!filewr.substring(filewr.lastIndexOf(".")+1).equals("nm")) {
                             filewr += ".nm";
+                        }
                         // Create a file writer
                       //  FileWriter wr = new FileWriter(fi, false);
                         FileWriter wr = new FileWriter(filewr);
@@ -270,8 +300,9 @@ class editor extends JFrame implements ActionListener {
                     try {
                         String filewr = jf.getSelectedFile().getAbsolutePath();
 
-                        if (!filewr.substring(filewr.lastIndexOf(".")+1).equals("txt"))
+                        if (!filewr.substring(filewr.lastIndexOf(".")+1).equals("txt")) {
                             filewr += ".txt";
+                        }
                         // Create a file writer
                        // FileWriter wr = new FileWriter(fi, false);
                         FileWriter wr = new FileWriter(filewr);
@@ -324,19 +355,101 @@ class editor extends JFrame implements ActionListener {
                         String open_name = fi.toString();
                         System.out.print("\nFile opened:" + open_name);
                         mod_path = open_name;
-                        // Take the input from the file
+                        StyledDocument doc = (StyledDocument) modt.getDocument();
+
+                        ArrayList<String> keywordList = new ArrayList<String>();
                         while ((s1 = br.readLine()) != null) {
                             sl.append("\n").append(s1);
-                        }
 
+
+                            /*    for (int i = constants.COMMENT+1; i < constants.NOT; i++) {
+                                    keywordList.add(constants.tokenImage[i].replaceAll("\u005c"", ""));
+                                }
+
+                            int i;
+                            String ss, res = "";
+                            // break into lines
+                            while ((i = s1.indexOf("\u005cn")) != -1) {
+                                ss = s1.substring(0, i);
+                                s1 = s1.substring(i+1);
+                                // add "//" to non-empty lines
+                                if (ss.trim().length()>0) res += "// " + ss;
+                                res += "\u005cn";
+                            }
+                            // deal with any trailing characters (with no new line ending them)
+                            if (s1.trim().length()>0) {
+                                res += "// " + s1 + "\u005cn";
+                                modt.setText(res);
+                            } */
+
+
+                        }
                         // Set the text
+
                         modt.setText(sl.toString());
+
+
+
+                        modt.getDocument().addDocumentListener(new DocumentListener() {
+                            @Override
+                            public void insertUpdate(DocumentEvent e) {
+
+
+                                System.out.print(" Text added");
+                                String s = constants.module;
+                                String content = modt.getText();
+                                BufferedReader reader = new BufferedReader(fr);
+
+                                String key = constants.tokenImage.toString();
+                                for (int i =0; i < constants.tokenImage.length; i++) {
+                                    if(content.contains(constants.tokenImage[i])) {
+                                        System.out.print("True");
+                                       /* switch(key) {
+                                            case "module": {
+                                                System.out.print("True");
+                                            }
+                                        } */
+
+
+                                    }
+                                }
+
+
+
+                                //while(content.lastIndexOf(s) >= 0) {
+
+                                    //int index = content.lastIndexOf(s);
+                                   // int end = index + s.length();
+
+
+                                  //  modt.setCaretPosition(end);
+
+                                   // System.out.print("'" + s + "' found. Press ESC to end search");
+
+                                  //  content = content.substring(0, index - 1);
+                                }
+
+                          //  }
+
+                            @Override
+                            public void removeUpdate(DocumentEvent e) {
+                                System.out.print(" Text removed");
+
+                            }
+
+                            @Override
+                            public void changedUpdate(DocumentEvent e) {
+
+                            }
+                        });
+
+
                     } catch (Exception evt) {
                         JOptionPane.showMessageDialog(f, evt.getMessage());
                     }
                 } else
                     JOptionPane.showMessageDialog(f, "the user cancelled the operation");
-                break;
+                    break;
             }
             case "Open Property" -> {
                 // Create an object of JFileChooser class
@@ -372,6 +485,8 @@ class editor extends JFrame implements ActionListener {
                         // Take the input from the file
                         while ((s1 = br.readLine()) != null) {
                             sl.append("\n").append(s1);
+
+
                         }
 
                         // Set the text
@@ -385,7 +500,6 @@ class editor extends JFrame implements ActionListener {
             }
             case "New Model" -> modt.setText("");
             case "New Property" -> propt.setText("");
-            case "Close" -> f.setVisible(false);
             case "Run" -> out.setVisible(true);
             case "Compile Model" -> {
                 if (mod_path != null){

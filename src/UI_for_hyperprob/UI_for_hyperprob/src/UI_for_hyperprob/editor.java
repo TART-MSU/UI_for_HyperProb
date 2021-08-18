@@ -2,6 +2,8 @@ package UI_for_hyperprob;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -10,25 +12,18 @@ import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.lang.Object;
-import java.awt.Font;
-import javax.swing.text.StyleContext;
-import java.awt.font.TextAttribute;
-import java.text.AttributedString;
-import java.io.FilenameFilter;
 import java.awt.event.ActionListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.net.URI;
 import javax.swing.text.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Scanner;
 import java.awt.MouseInfo;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -39,8 +34,9 @@ class editor extends JFrame implements ActionListener {
    // JTextArea modt;
     //JTextArea propt;
     JTextPane modt;
+    JTextPane propt;
    // JEditorPane modt;
-    JEditorPane propt;
+   // JEditorPane propt;
     JFrame f;
     JPanel P;
     JTextArea out;
@@ -65,8 +61,9 @@ class editor extends JFrame implements ActionListener {
        // modt = new JTextArea(15,50);
         JScrollPane scrollm = new JScrollPane(modt);
         scrollm.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-        propt = new JEditorPane();
+        
+        propt = new JTextPane();
+       // propt = new JEditorPane();
         propt.setPreferredSize(new Dimension(500,50));
        // propt = new JTextArea(10,50);
         JScrollPane scrollp = new JScrollPane(propt);
@@ -105,10 +102,14 @@ class editor extends JFrame implements ActionListener {
         // Create a menu for menu
         JMenu m2 = new JMenu("Edit");
 
+
         // Create menu items
         JMenuItem mi4 = new JMenuItem("Cut");
+        mi4.setMnemonic(KeyEvent.VK_X);
         JMenuItem mi5 = new JMenuItem("Copy");
+        mi5.setMnemonic(KeyEvent.VK_C);
         JMenuItem mi6 = new JMenuItem("Paste");
+        mi6.setMnemonic(KeyEvent.VK_V);
 
         // Add action listener
         mi4.addActionListener(this);
@@ -239,12 +240,143 @@ class editor extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
 
+
+       modt.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (s.equals("Cut")) {
+                    modt.cut();
+                } if (s.equals("Copy")) {
+                    modt.copy();
+                } if (s.equals("Paste")) {
+                    modt.paste();
+                }
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+      /*  propt.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (s.equals("Cut")) {
+                    propt.cut();
+                } if (s.equals("Copy")) {
+                    propt.copy();
+                } if (s.equals("Paste")) {
+                    propt.paste();
+                }
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        }); */
+
         //String open_name = null;
+        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+      /*  modt.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e1) {
+                if (s.equals("Cut")) {
+                    modt.cut();
+                } if (s.equals("Copy")) {
+                    modt.copy();
+                } if (s.equals("Paste")) {
+                    modt.paste();
+                }
+            }
+
+            public void focusLost(FocusEvent e1) {
+
+            }
+        }); */
+
+        propt.addFocusListener(new FocusListener() {
+
+            public void focusGained(FocusEvent e) {
+                if (s.equals("Cut")) {
+                    propt.cut();
+                } if (s.equals("Copy")) {
+                    propt.copy();
+                } if (s.equals("Paste")) {
+                    propt.paste();
+                }
+
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                // propt.cut();
+
+            }
+        });
 
         switch (s) {
-            case "Cut" -> modt.cut();
-            case "Copy" -> modt.copy();
-            case "Paste" -> modt.paste();
+
+        /*    case "Cut" -> {
+                if (modt.isFocusOwner()) {
+                    modt.cut();
+                } else {
+                    propt.cut();
+                }
+
+            }
+        /*    case "Copy" -> {
+                if (focusOwner.equals(propt)) {
+                    propt.copy();
+                } else {
+                    modt.copy();
+                }
+            }
+            case "Paste" -> {
+                if (Objects.equals(focusOwner, propt)) {
+                    propt.paste();
+                } else {
+                    modt.paste();
+                }
+            } */
+
+            // case "Cut" -> modt.cut();
+           // case "Copy" -> modt.copy();
+           // case "Paste" -> modt.paste();
             case "Save Model" -> {
 
                 JFileChooser j = new JFileChooser("f:");
